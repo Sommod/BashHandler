@@ -55,8 +55,8 @@ bool internal_jobs(std::string) { return false; }
 bool internal_let(std::string) { return false; }
 bool internal_local(std::string) { return false; }
 bool internal_read(std::string) { return false; }
-bool internal_shift(std::string) { return false; }
+// bool internal_shift(std::string) { return false; }
 bool internal_shopt(std::string) { return false; }
-bool internal_source(std::string) { return false; }
+// bool internal_source(std::string) { return false; }
 bool internal_exit(std::string) { return false; }
 bool internal_logout(std::string) { return false; }
