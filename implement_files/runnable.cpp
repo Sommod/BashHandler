@@ -69,18 +69,20 @@ bool run_command(cmd_type cmd, std::string args) {
 
 bool run_command_cd(HistoryManager m, std::string args) {
     
-    pid_t pid = fork();
+    // pid_t pid = fork();
 
-    if(pid > 0) {
-        int status;
-        waitpid(pid, &status, 0);
-    } else {
-        return internal_cd(m, args);
-        // Catch if split does not execute properly
-        return false;
-    }
+    // if(pid > 0) {
+    //     int status;
+    //     waitpid(pid, &status, 0);
+    // } else {
+    //     return internal_cd(m, args);
+    //     // Catch if split does not execute properly
+    //     return false;
+    // }
 
-    return true;
+    // return true;
+
+    return internal_cd(m, args);
 }
 
 /**

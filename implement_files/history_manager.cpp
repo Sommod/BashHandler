@@ -74,12 +74,15 @@ void HistoryManager::addDirectory(std::string dir) {
 
 void HistoryManager::save() {
     std::ofstream logFile(baseDir + "data/Directories.log");
-    logFile.open(baseDir + "data/Directories.log");
+    // logFile.open(baseDir + "data/Directories.log");
 
-    std::string log = "";
-    for (int i = 0; i < directory.size(); i++) {
-        log += directory.at(i) + "\n";
+    if(logFile.is_open()) {
+        std::string log = "";
+
+        for (int i = 0; i < directory.size(); i++)
+            log += directory.at(i) + "\n";
+            
+        logFile << log;
+        logFile.close();
     }
-    logFile << log;
-    logFile.close();
 }
