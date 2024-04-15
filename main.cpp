@@ -27,7 +27,9 @@
 std::string convert_to_string(int, char**);
 cmd_type isInternalCommand(std::string);
 bool isKeyword(std::string);
+bool isFile(std::string);
 void runKeyWord(std::string);
+void runFile(std::string);
 
 /**
 * Name: main
@@ -149,6 +151,17 @@ cmd_type isInternalCommand(std::string command) {
 
 bool isKeyword(std::string arg) { return arg == "if"; }
 
+bool isFile(std::string input) {
+	std::fstream testFile(getCurrentDirectory() + "/" + split_string(input, " ")[0]);
+	bool ret = false;
+
+	if(testFile.is_open())
+		ret = true;
+	
+	testFile.close();
+	return ret;
+}
+
 /**
 * Name: runKeyword
 * Type: Function
@@ -156,3 +169,7 @@ bool isKeyword(std::string arg) { return arg == "if"; }
 *   args STRING - input of the program.
 */
 void runKeyword(std::string args) { runCommand(args); }
+
+void runFile(std::string input) {
+	
+}

@@ -42,8 +42,8 @@ bool run_command(cmd_type cmd, std::string args) {
                 return internal_local(args);
             case 14: // set
                 return internal_set(args);
-            case 15: // shift
-                return internal_shift(args);
+            //case 15: // shift
+                //return internal_shift(args);
             case 16: // shopt
                 return internal_shopt(args);
             case 17: // source
