@@ -22,6 +22,15 @@ insied of the file
 bool internal_shift(std::string args) {
      std::vector<std::string> input = split_string(args," "); // this gets the input form user and  puts it into a vector [f1,f2,f3,2] 
      int N = input.size(); // gives me the total size of vector size/ total number of argumnets 4 
-    
+      for (int i =0; i< N; i++){
+        int  n = input.at(i).substr((i==0 ? 3 :(i+1)==N? 5 :(i%2)==1 ? 5 : 7),input[i].length()); // this gets the final argumnet form the vector
+        if( n ='1'){
+            std::string newargs = input.at(N+1);
+            return true;
+        }else{
+            std::string newargs = input.at(n);
+        }
+        
+      }
     return false;
 }
