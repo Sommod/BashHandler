@@ -3,76 +3,88 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <sys/wait.h>
 
 // Example input >>>>> ("" are just for representation)     "source filename.sh [args...]"
 // This is the same as though the user inputted this command: ". filename.sh [args...]"
 // '.' and SOURCE are similar commands, if you need to research what 'source' does.
 
+/*
+@Author Theint Nwe Nyein
+Date 4/15/24
+Log: Updated the program to take additional arguments  
+*/
+
 // This function is used to execute shell commands in the child process
-bool executeShellCommand(const std::string& command) {
-    FILE* pipe = popen(command.c_str(), "r");
-    if (!pipe) {
-        std::cerr << "Error executing command: " << command << std::endl;
-        return false;
-    }
+int executeShellCommand(const std::string& filename, const std::vector<std::string>& args) {
+    pid_t pid = fork();
 
-// Buffer to store the outputs of each shell command
-    char buffer[128];
-    while (!feof(pipe)) {
-        if (fgets(buffer, 128, pipe) != nullptr)
-            std::cout << buffer;
-    }
+    if (pid == -1) {
+        std::cerr << "Fork failed!" << std::endl;
+        return -1;
 
-// Therminate the child process
-    pclose(pipe);
-    return true;
-}
+    } else if (pid == 0) {
+        // Child process
+        std::vector<const char*> argv;
+        argv.reserve(args.size() + 3);
+        argv.push_back("bash");
+        argv.push_back(filename.c_str());
 
-bool internal_source(std::string args) {
-    // Check if the command starts with "source"
-    if (args.find("source ") == 0) {
-        // Remove the "source " prefix
-        args = args.substr(7);
+        for (const auto& arg : args) {
+            argv.push_back(arg.c_str());
+        }
+        argv.push_back(nullptr);
+        execvp("bash", const_cast<char* const*>(argv.data())); // Returns only if there is an error
+        std::cerr << "Error executing command: " << filename << std::endl;
+        exit(EXIT_FAILURE);
     } else {
-        std::cerr << "Error: Invalid source command. Please start with 'source filename.sh'" << std::endl;
-        return false;
-    }
-
-    std::ifstream file(args);
-    if (!file.is_open()) {
-        std::cerr << "Error: Unable to open file " << args << std::endl;
-        return false;
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        // Skip empty lines or lines starting with '#'
-        if (line.empty() || line[0] == '#')
-            continue;
-
-        // Determine if it's a shell script
-        bool isShellScript = line.find("#!") == 0;
-
-        // Execute each line in bash
-        if (!executeShellCommand(isShellScript ? line : "bash -c \"" + line + "\"")) {
-            file.close();
-            return false;
+        // Parent process
+        int status;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            return WEXITSTATUS(status);
+        } else {
+            std::cerr << "Child process did not terminate normally" << std::endl;
+            return -1;
         }
     }
+}
 
-    file.close();
+// Function to parse the input command line
+std::pair<std::string, std::vector<std::string>> parseCommand(const std::string& command) {
+    std::istringstream iss(command);
+    std::string sourceToken;
+    iss >> sourceToken; // Get the "source" keyword
+    std::string filename;
+    iss >> filename; // Separate the filename from the arguments
+    std::vector<std::string> args;
+    std::string arg;
+    while (iss >> arg) {
+        args.push_back(arg); // Push back all the provided args
+    }
+    return std::make_pair(filename, args);
+}
+
+
+bool internal_source(std::string command) {
+    std::pair<std::string, std::vector<std::string>> parsedCommand = parseCommand(command);
+    std::string filename = parsedCommand.first;
+    std::vector<std::string> args = parsedCommand.second;
+    executeShellCommand(filename, args);
     return true;
 }
 
-/* Testing the source command
-int main() {
-    std::string command = "source testing_script.sh"; 
-    bool success = internal_source(command);
+//Testing the source command
+/*
+int main(){
+    std::string command = "source testing_script.sh arg1 arg2"; 
+   bool success = internal_source(command);
     if (!success) {
         std::cerr << "Failed to execute source command" << std::endl;
         return 1;
     }
-
     return 0;
 }
 */
+
+
