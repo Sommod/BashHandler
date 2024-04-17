@@ -30,6 +30,7 @@ bool isKeyword(std::string);
 bool isFile(std::string);
 void runKeyWord(std::string);
 void runFile(std::string);
+void output_to_file(std::string, std::string, bool);
 
 /**
 * Name: main
@@ -174,4 +175,28 @@ void runKeyword(std::string args) { runCommand(args); }
 
 void runFile(std::string input) {
 	
+}
+
+void output_to_file(std::string filename, std::string args, bool append){
+    if(append){
+        std::fstream file;
+        file.open(filename, std::ios_base::app);
+        if(file.is_open()){
+            file << args;
+            file.flush();
+        }else{
+            std::cout << "could not append."<< std::endl;
+        }
+        file.close();
+    }else{
+        std::fstream file;
+        file.open(filename);
+        if(file.is_open()){
+            file << args;
+            file.flush();
+        }else{
+            std::cout << "could not output."<< std::endl;
+        }
+        file.close(); 
+    }
 }
