@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sys/wait.h>
 
-bool run_command(cmd_type cmd, std::string args) {
+bool run_command_subsys(cmd_type cmd, std::string args) {
 
     pid_t pid = fork();
 
@@ -65,6 +65,55 @@ bool run_command(cmd_type cmd, std::string args) {
     }
 
     return true;
+}
+
+bool run_command(cmd_type cmd, std::string args){
+    switch (cmd){
+        case 1: // alias
+            return internal_alias(args);
+        case 2: // bg
+            return internal_bg(args);
+            // case 3: // cd
+            //return internal_cd(args);
+        case 4: // eval
+            return internal_eval(args);
+        case 5: // exec
+            return internal_exec(args);
+        case 6: // _export
+            return internal_export(args);
+        case 7: // fc
+            return internal_fc(args);
+        case 8: // fg
+            return internal_fg(args);
+        case 9: // help
+            return internal_help(args);
+        case 10: // history
+            return internal_history(args);
+        case 11: // jobs
+            return internal_jobs(args);
+        case 12: // let
+            return internal_let(args);
+        case 13: // local
+            return internal_local(args);
+        case 14: // set
+            return internal_set(args);
+            //case 15: // shift
+            //return internal_shift(args);
+        case 16: // shopt
+            return internal_shopt(args);
+        case 17: // source
+            return internal_source(args);
+        case 18: // unalias
+            return internal_unalias(args);
+        case 0: // NONE
+            // Not an internal command, should be something like a file input:  gamma < fileName.txt == OR === fileName.txt
+                                                                                //NOTE: 'gamma'is NOT included in the input/args
+            return true;
+        default:
+            std::cout << "Error, could not run inputted commands... exiting program" << std::endl;
+            // Kill Program
+            return false;
+    }
 }
 
 bool run_command_cd(HistoryManager m, std::string args) {
