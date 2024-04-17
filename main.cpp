@@ -73,7 +73,13 @@ int main(int argc, char** args) {
                 std::cout << getCurrentDirectory() << " $ ";
                 std::getline(std::cin, uInput);
                 continue;
-            }
+            } else if(split_string(uInput, " ")[0] == "(") {
+		
+		//TODO: Run a loop for all the commands for the sub-system
+		std::cout << getCurrentDirectory() << " $ ";
+    		std::getline(std::cin, uInput);
+		continue;		
+	    }
             
             cmd = isInternalCommand(split_string(uInput, " ")[0]);
 
@@ -86,7 +92,7 @@ int main(int argc, char** args) {
                     run_command_cd(hm, uInput);
                 } else
                     run_command(cmd, uInput);
-            } else if(input.c_str()[0] == "(") {  
+            } else if(uInput.c_str()[0] == '(') {  
                 run_command_subsys(cmd, uInput); //TODO: Need to adjust for multi-command input
             } else
                 runExternalCommand((char*)split_string(uInput, " ")[0].c_str(), uInput);
