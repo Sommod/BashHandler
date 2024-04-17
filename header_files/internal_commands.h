@@ -32,7 +32,7 @@ bool internal_let(std::string);
 bool internal_local(std::string);
 bool internal_read(std::string);
 bool internal_set(std::string);
-std::string internal_shift(std::string);
+std::string internal_shift(std::string, int);
 bool internal_shopt(std::string);
 bool internal_source(std::string);
 bool internal_unalias(std::string);

@@ -19,7 +19,9 @@ insied of the file
 */
 
 
-std::string internal_shift(std::string args) {
+// TODO: Needs edited
+
+std::string internal_shift(std::string args, int num) {
      std::vector<std::string> input = split_string(args," "); // this gets the input form user and  puts it into a vector [f1,f2,f3,2] 
      int N = input.size(); // gives me the total size of vector size/ total number of argumnets 4 
       for (int i=0; i< N; i++){
