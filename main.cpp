@@ -85,6 +85,8 @@ int main(int argc, char** args) {
                     run_command_cd(hm, uInput);
                 } else
                     run_command(cmd, uInput);
+            } else if(input.c_str()[0] == "(") {  
+                run_command_subsys(cmd, uInput); //TODO: Need to adjust for multi-command input
             } else
                 runExternalCommand((char*)split_string(uInput, " ")[0].c_str(), uInput);
 
