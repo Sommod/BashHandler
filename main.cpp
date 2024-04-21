@@ -74,8 +74,11 @@ int main(int argc, char** args) {
                 std::getline(std::cin, uInput);
                 continue;
             } else if(split_string(uInput, " ")[0] == "(") {
+		std::string subString = uInput.substr(2, uInput.length() - 2);
+		std::vector<std::string> commands = split_string(subString, ";");
+
+		//TODO: Loop through all the commands
 		
-		//TODO: Run a loop for all the commands for the sub-system
 		std::cout << getCurrentDirectory() << " $ ";
     		std::getline(std::cin, uInput);
 		continue;		
