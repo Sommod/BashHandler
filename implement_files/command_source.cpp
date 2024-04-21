@@ -1,5 +1,6 @@
 #include "../header_files/internal_commands.h" // String, Vector
 #include "../header_files/util.h" // String, Vector, Unistd.h
+#include "../header_files/history_manager.h" // HistoryManager
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -15,7 +16,14 @@ Date 4/15/24
 Log: Updated the program to take additional arguments  
 */
 
+/*
+@author Theint Nwe Nyein
+@date 4/19/2024
+@log: Added executeInternalCommand function, but was not able to test it yet
+*/
+
 // This function is used to execute shell commands in the child process
+
 int executeShellCommand(const std::string& filename, const std::vector<std::string>& args) {
     pid_t pid = fork();
 
@@ -50,11 +58,38 @@ int executeShellCommand(const std::string& filename, const std::vector<std::stri
     }
 }
 
+void executeInternalCommand(HistoryManager& hm, std::string command, std::vector<std::string> args){
+    if (command == "cd"){
+        internal_cd(hm, args[0]);
+    }
+    else if(command == "alias"){
+        internal_alias(args[0]);
+    }
+    else if(command == "unalias"){
+        internal_unalias(args[0]);
+    }
+    else if(command == "help"){
+        internal_help(args[0]);
+    }
+    else if(command == "set"){
+        internal_set(args[0]);
+    }
+    /*
+    else if(command == "shift"){
+        internal_shift(args[0], num);
+    }
+    */
+   
+    else{
+        std::cerr << "Command not found" << std::endl;
+    }
+}
+
 // Function to parse the input command line
 std::pair<std::string, std::vector<std::string>> parseCommand(const std::string& command) {
     std::istringstream iss(command);
-    std::string sourceToken;
-    iss >> sourceToken; // Get the "source" keyword
+    std::string commandName;
+    iss >> commandName; // Get the "source" keyword
     std::string filename;
     iss >> filename; // Separate the filename from the arguments
     std::vector<std::string> args;
@@ -66,11 +101,16 @@ std::pair<std::string, std::vector<std::string>> parseCommand(const std::string&
 }
 
 
-bool internal_source(std::string command) {
+bool internal_source(HistoryManager& hm, std::string command) {
     std::pair<std::string, std::vector<std::string>> parsedCommand = parseCommand(command);
     std::string filename = parsedCommand.first;
     std::vector<std::string> args = parsedCommand.second;
-    executeShellCommand(filename, args);
+    if (filename == "cd" || filename == "alias" || filename == "unalias" ||
+        filename == "help" || filename == "set" || filename == "shift") {
+        executeInternalCommand(hm,filename, args);
+    } else {
+        executeShellCommand(filename, args);
+    }
     return true;
 }
 
@@ -86,5 +126,3 @@ int main(){
     return 0;
 }
 */
-
-
