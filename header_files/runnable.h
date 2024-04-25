@@ -6,5 +6,5 @@
 bool run_command(cmd_type, std::string);
 bool run_command_cd(HistoryManager, std::string);
 bool runExternalCommand(const char*, std::string);
-bool run_command_subsys(cmd_type,std::string);
+bool run_command_subsys(cmd_type, std::string);
 #endif
