@@ -28,7 +28,6 @@ std::string convert_to_string(int, char**);
 cmd_type isInternalCommand(std::string);
 bool isKeyword(std::string);
 bool isFile(std::string);
-void runKeyWord(std::string);
 void runFile(std::string);
 void output_to_file(std::string, std::string, bool);
 
@@ -89,14 +88,14 @@ int main(int argc, char** args) {
             if(uInput == "exit" || uInput == "logout")
                 break;
             else if(isKeyword(split_string(uInput, " ")[0]))
-                runCommand(uInput);
+                run_command(cmd, hm, uInput);
             else if(cmd != none) {
                 if(cmd == cd) {
                     run_command_cd(hm, uInput);
                 } else
-                    run_command(cmd, uInput);
+                    run_command(cmd, hm, uInput);
             } else if(uInput.c_str()[0] == '(') {  
-                run_command_subsys(cmd, uInput); //TODO: Need to adjust for multi-command input
+                run_command_subsys(cmd, hm, uInput); //TODO: Need to adjust for multi-command input
             } else
                 runExternalCommand((char*)split_string(uInput, " ")[0].c_str(), uInput);
 
@@ -105,7 +104,7 @@ int main(int argc, char** args) {
         }
     } else { // Used for running batch mode
         if(isKeyword(split_string(uInput, " ")[0])) {
-            runCommand(uInput);
+            run_command(cmd, hm, uInput);
         } else {
             runExternalCommand(split_string(uInput, " ")[0].c_str(), uInput);
         }
@@ -173,14 +172,6 @@ bool isFile(std::string input) {
 	testFile.close();
 	return ret;
 }
-
-/**
-* Name: runKeyword
-* Type: Function
-* Parameter:
-*   args STRING - input of the program.
-*/
-void runKeyword(std::string args) { runCommand(args); }
 
 void runFile(std::string input) {
 	

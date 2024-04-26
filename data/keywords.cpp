@@ -8,6 +8,8 @@
 #include "../header_files/util.h"
 #include <iostream>
 
+HistoryManager hm;
+
 cmd_type InternalCommand(std::string command) {
     if(command == "alias") return alias;
     else if(command == "bg") return bg;

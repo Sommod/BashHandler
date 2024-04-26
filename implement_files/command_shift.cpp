@@ -3,6 +3,7 @@
 
 
 std::string internal_shift(std::string args){
+    return "";
 }
 
 

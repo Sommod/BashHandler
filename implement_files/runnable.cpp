@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sys/wait.h>
 
-bool run_command_subsys(cmd_type cmd, std::string args) {
+bool run_command_subsys(cmd_type cmd, HistoryManager& hm, std::string args) {
 
     pid_t pid = fork();
 
@@ -47,7 +47,7 @@ bool run_command_subsys(cmd_type cmd, std::string args) {
             case 16: // shopt
                 return internal_shopt(args);
             case 17: // source
-                return internal_source(args);
+                return internal_source(hm, args);
             case 18: // unalias
                 return internal_unalias(args);
             case 0: // NONE
@@ -67,7 +67,7 @@ bool run_command_subsys(cmd_type cmd, std::string args) {
     return true;
 }
 
-bool run_command(cmd_type cmd, std::string args){
+bool run_command(cmd_type cmd, HistoryManager hm, std::string args){
     switch (cmd){
         case 1: // alias
             return internal_alias(args);
@@ -102,7 +102,7 @@ bool run_command(cmd_type cmd, std::string args){
         case 16: // shopt
             return internal_shopt(args);
         case 17: // source
-            return internal_source(args);
+            return internal_source(hm, args);
         case 18: // unalias
             return internal_unalias(args);
         case 0: // NONE
