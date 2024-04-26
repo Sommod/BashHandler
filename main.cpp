@@ -73,15 +73,32 @@ int main(int argc, char** args) {
                 std::getline(std::cin, uInput);
                 continue;
             } else if(split_string(uInput, " ")[0] == "(") {
-		std::string subString = uInput.substr(2, uInput.length() - 2);
-		std::vector<std::string> commands = split_string(subString, ";");
+		        std::string subString = uInput.substr(2, uInput.length() - 2);
+		        std::vector<std::string> commands = split_string(subString, ";");
 
-		//TODO: Loop through all the commands
+		        for(auto& s : commands) {
+                    if(s == " )")
+                        break;
+                    
+                    cmd = isInternalCommand(split_string(s, " ")[0]);
+
+                    if(s == "exit" || s == "logout")
+                        break;
+                    else if(isKeyword(split_string(s, " ")[0]))
+                        run_command(cmd, hm, s);
+                    else if(cmd != none) {
+                        if(cmd == cd) {
+                            run_command_cd(hm, s);
+                        } else
+                            run_command(cmd, hm, s);
+                    } else
+                        runExternalCommand((char*)split_string(s, " ")[0].c_str(), s);
+                }
 		
-		std::cout << getCurrentDirectory() << " $ ";
-    		std::getline(std::cin, uInput);
-		continue;		
-	    }
+		        std::cout << getCurrentDirectory() << " $ ";
+    	        std::getline(std::cin, uInput);
+		        continue;		
+	        }
             
             cmd = isInternalCommand(split_string(uInput, " ")[0]);
 
@@ -94,7 +111,8 @@ int main(int argc, char** args) {
                     run_command_cd(hm, uInput);
                 } else
                     run_command(cmd, hm, uInput);
-            } else if(uInput.c_str()[0] == '(') {  
+            } else if(uInput.c_str()[0] == '(') {
+                std::cout << "Hit" << std::endl;
                 run_command_subsys(cmd, hm, uInput); //TODO: Need to adjust for multi-command input
             } else
                 runExternalCommand((char*)split_string(uInput, " ")[0].c_str(), uInput);

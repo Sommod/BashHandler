@@ -108,6 +108,7 @@ bool run_command(cmd_type cmd, HistoryManager hm, std::string args){
         case 0: // NONE
             // Not an internal command, should be something like a file input:  gamma < fileName.txt == OR === fileName.txt
                                                                                 //NOTE: 'gamma'is NOT included in the input/args
+            std::cout << "External" << std::endl;
             return true;
         default:
             std::cout << "Error, could not run inputted commands... exiting program" << std::endl;

@@ -1,0 +1,4 @@
+ls -ld
+echo "This is some text"
+cd -l
+echo {1}
